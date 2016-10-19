@@ -1,21 +1,18 @@
-var jsdom = require('jsdom').jsdom;
+require('babel-register');
+var jsdom = require('jsdom');
+var chai = require('chai');
+var chaiEnzyme = require('chai-enzyme');
+var chaiJsx = require('chai-jsx');
 
-var exposedProperties = ['window', 'navigator', 'document'];
+chai.use(chaiEnzyme());
+chai.use(chaiJsx);
 
-global.document = jsdom('');
-global.window = document.defaultView;
-Object.keys(document.defaultView).forEach((property) => {
-    if (typeof global[property] === 'undefined') {
-        exposedProperties.push(property);
-        global[property] = document.defaultView[property];
-    }
-});
+global.document = jsdom.jsdom('<!doctype html><html><body></body></html>');
+global.window = global.document.defaultView;
+global.navigator = global.window.navigator;
 
-global.navigator = {
-    userAgent: 'node.js'
+global.window.URL = {
+  createObjectURL: function createObjectURL(arg) {
+    return 'data://' + arg.name;
+  }
 };
-
-documentRef = document;
-
-require('babel-core/register');
-require('babel-polyfill');

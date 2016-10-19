@@ -4,57 +4,110 @@ import {shallow, mount, render} from 'enzyme';
 import {expect} from 'chai';
 import sinon from 'sinon';
 
-import MyComponent from '../index';
+import { Form, ValidatedCheckbox, ValidatedInput } from '../index';
 
-// Demo tests
+describe('ValidatedCheckbox', () => {
 
-// Shallow Rendering
-// https://github.com/airbnb/enzyme/blob/master/docs/api/shallow.md
-describe('Shallow Rendering', () => {
+  it('isChecked called', () => {
+    const onSubmit = sinon.spy();
+    const wrapper = mount(
+      <Form
+        onValidSubmit={onSubmit}
+        validationEvent='onBlur'>
+        <ValidatedCheckbox
+          name='agree'
+          validate='isChecked' >
+          I agree
+        </ValidatedCheckbox>
+      </Form>
+    );
 
-    it('to have three `.icon-test`s', () => {
-        const wrapper = shallow(<MyComponent />);
-        expect(wrapper.find('.icon-test')).to.have.length(3);
-    });
-
-    it('simulates click events', () => {
-        const buttonClick = sinon.spy();
-        const wrapper = shallow(
-          <MyComponent handleClick={buttonClick} />
-        );
-        wrapper.find('button').simulate('click');
-        expect(buttonClick.calledOnce).to.equal(true);
-    });
-
+    wrapper.find('form').simulate('submit');
+    expect(wrapper.find('.has-error')).to.have.length(1);
+  });
 });
 
-// Full DOM Rendering
-// https://github.com/airbnb/enzyme/blob/master/docs/api/mount.md
-describe('Full DOM Rendering', () => {
+describe('ValidatedInput', () => {
 
-    it('allows us to set props', () => {
-        const wrapper = mount(<MyComponent bar='baz' />);
-        expect(wrapper.props().bar).to.equal('baz');
-        wrapper.setProps({ bar: 'foo' });
-        expect(wrapper.props().bar).to.equal('foo');
-    });
+  it('required called', () => {
+    const onSubmit = sinon.spy();
+    const onChange = sinon.spy();
+    const wrapper = mount(
+      <Form
+        onValidSubmit={onSubmit}
+        validationEvent='onBlur'>
+        <ValidatedInput
+          name="password"
+          type="password"
+          value=''
+          onChange={onChange}
+          label="Your personal password"
+          validate='required,isLength:6:60'
+          errorHelp={{
+            required: 'Please specify a password',
+            isLength: 'Password must be at least 6 characters'
+          }} />
+      </Form>
+    );
 
-    it('calls componentDidMount', () => {
-        sinon.spy(MyComponent.prototype, 'componentDidMount');
-        const wrapper = mount(<MyComponent />);
-        expect(MyComponent.prototype.componentDidMount.calledOnce).to.be.true;
-        MyComponent.prototype.componentDidMount.restore();
-    });
+    wrapper.find('form').simulate('submit');
+    wrapper.find('input').simulate('change', {target: {value: 'password'}});
+    expect(onChange.calledOnce).to.equal(true);
+    expect(onSubmit.callCount).to.equal(0);
+    expect(wrapper.find('.help-block')).to.have.text('Please specify a password');
+    expect(wrapper.find('.has-error')).to.have.length(1);
+  });
 
-});
+  it('isLength called', () => {
+    const onSubmit = sinon.spy();
+    const onChange = sinon.spy();
+    const wrapper = mount(
+      <Form
+        onValidSubmit={onSubmit}
+        validationEvent='onBlur'>
+        <ValidatedInput
+          name="password"
+          type="password"
+          value='blah'
+          onChange={onChange}
+          label="Your personal password"
+          validate='required,isLength:6:60'
+          errorHelp={{
+            required: 'Please specify a password',
+            isLength: 'Password must be at least 6 characters'
+          }} />
+      </Form>
+    );
 
-// Static Rendered Markup
-// https://github.com/airbnb/enzyme/blob/master/docs/api/render.md
-describe('Static Rendered Markup', () => {
+    wrapper.find('form').simulate('submit');
+    expect(onSubmit.callCount).to.equal(0);
+    expect(wrapper.find('.help-block')).to.have.text('Password must be at least 6 characters');
+    expect(wrapper.find('.has-error')).to.have.length(1);
+  });
 
-    it('renders three `.icon-test`s', () => {
-        const wrapper = render(<MyComponent />);
-        expect(wrapper.find('.icon-test').length).to.equal(3);
-    });
+  it('submit called', () => {
+    const onSubmit = sinon.spy();
+    const onChange = sinon.spy();
+    const wrapper = mount(
+      <Form
+        onValidSubmit={onSubmit}
+        validationEvent='onBlur'>
+        <ValidatedInput
+          name="password"
+          type="password"
+          value='password'
+          onChange={onChange}
+          label="Your personal password"
+          validate='required,isLength:6:60'
+          errorHelp={{
+            required: 'Please specify a password',
+            isLength: 'Password must be at least 6 characters'
+          }} />
+      </Form>
+    );
 
+    wrapper.find('form').simulate('submit');
+    expect(onSubmit.calledOnce).to.equal(true);
+    expect(wrapper.find('.has-error')).to.have.length(0);
+  });
 });
