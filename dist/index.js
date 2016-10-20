@@ -241,8 +241,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return child;
 	      }
 	
-	      var model = {};
-	
 	      if (child.type === _ValidatedInput2.default || child.type === _RadioGroup2.default || child.type && child.type.prototype !== null && (child.type.prototype instanceof _ValidatedInput2.default || child.type.prototype instanceof _RadioGroup2.default)) {
 	        var _ret = function () {
 	          var name = child.props && child.props.name;
@@ -264,14 +262,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	            _this4._validateInput(name);
 	            return origCallback && origCallback(e);
 	          };
-	
-	          if (name in model) {
-	            if (child.props.type === 'checkbox') {
-	              newProps.defaultChecked = model[name];
-	            } else {
-	              newProps.defaultValue = model[name];
-	            }
-	          }
 	
 	          var error = _this4._hasError(name);
 	
@@ -40505,12 +40495,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	* @returns {Boolean}
 	*/
 	_validator2.default['isChecked'] = function isChecked(val) {
-	  // compare it against string representation of a bool value, because
-	  // validator ensures all incoming values are coerced to strings
-	  // https://github.com/chriso/validator.js#strings-only
-	  console.log('(((((((((())))))))))');
-	  console.log(val);
-	  return val === 'true';
+	  return val;
 	};
 	
 	exports.default = _validator2.default;
@@ -43322,8 +43307,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    key: 'getChecked',
 	    value: function getChecked() {
 	      var element = _reactDom2.default.findDOMNode(this.input);
-	      console.log('***********');
-	      console.log(this.input.checked);
 	      if (element) {
 	        return element.checked;
 	      }
