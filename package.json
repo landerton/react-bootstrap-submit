@@ -1,10 +1,10 @@
 {
   "name": "react-bootstrap-submit",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Enforces valid react bootstrap form inputs before submit.",
   "repository": {
     "type": "git",
-    "url": "https://github.com/landerton/react-bootstrap-submit.git"
+    "url": "git+https://github.com/landerton/react-bootstrap-submit.git"
   },
   "author": "Landon Anderton",
   "license": "MIT",
@@ -40,6 +40,7 @@
     "babel-preset-react": "^6.3.13",
     "babel-preset-stage-0": "^6.3.13",
     "babel-register": "^6.9.0",
+    "babel-runtime": "^6.6.1",
     "chai": "^3.5.0",
     "chai-enzyme": "^0.5.2",
     "chai-jsx": "^1.0.1",
@@ -58,13 +59,11 @@
     "webpack": "^1.13.2"
   },
   "peerDependencies": {
-    "react": "~0.14.8 || ^15.0.0",
-    "react-dom": "~0.14.8 || ^15.0.0"
-  },
-  "dependencies": {
-    "babel-runtime": "^6.6.1",
-    "classnames": "^2.2.5",
+    "react": "^15.3.0",
+    "react-dom": "^15.3.0",
     "react-bootstrap": "^0.30.5",
-    "validator": "^6.1.0"
-  }
+    "validator": "^6.1.0",
+    "classnames": "^2.2.5"
+  },
+  "main": "index.js"
 }

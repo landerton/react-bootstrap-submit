@@ -5,10 +5,6 @@ export default class InputContainer extends React.Component {
     this._inputs = {};
   }
 
-  componentWillUnmount() {
-
-  }
-
   registerInput(input) {
     let type = input.props.type;
     let name = input.props.name;
@@ -24,7 +20,7 @@ export default class InputContainer extends React.Component {
       this._inputs[name] = input;
     }
   }
-  
+
   unregisterInput(input) {
     let type = input.props.type;
     let name = input.props.name;

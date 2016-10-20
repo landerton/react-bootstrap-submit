@@ -86,8 +86,6 @@ export default class Form extends InputContainer {
       return child;
     }
 
-    let model = this.props.model || {};
-
     if (child.type === ValidatedInput ||
       child.type === RadioGroup || (
         child.type &&
@@ -109,7 +107,7 @@ export default class Form extends InputContainer {
       };
 
       let evtName = child.props.validationEvent ?
-      child.props.validationEvent : this.props.validationEvent;
+        child.props.validationEvent : this.props.validationEvent;
 
       let origCallback = child.props[evtName];
 
@@ -117,14 +115,6 @@ export default class Form extends InputContainer {
         this._validateInput(name);
         return origCallback && origCallback(e);
       };
-
-      if (name in model) {
-        if (child.props.type === 'checkbox') {
-          newProps.defaultChecked = model[name];
-        } else {
-          newProps.defaultValue = model[name];
-        }
-      }
 
       let error = this._hasError(name);
 
@@ -177,7 +167,6 @@ export default class Form extends InputContainer {
 
     if (Array.isArray(input)) {
       console.warn('Multiple inputs use the same name "' + iptName + '"');
-
       return false;
     }
 
@@ -194,9 +183,6 @@ export default class Form extends InputContainer {
       result = true;
     }
 
-    if (typeof this.props.validateOne === 'function') {
-      result = this.props.validateOne(iptName, value, context, result);
-    }
     // if result is !== true, it is considered an error
     // it can be either bool or string error
     if (result !== true) {
@@ -216,26 +202,12 @@ export default class Form extends InputContainer {
     let isValid = true;
     let errors = [];
 
-    if (typeof this.props.validateAll === 'function') {
-      let result = this.props.validateAll(context);
-
-      if (result !== true) {
+    Object.keys(this._inputs).forEach(iptName => {
+      if (!this._validateOne(iptName, context)) {
         isValid = false;
-
-        Object.keys(result).forEach(iptName => {
-          errors.push(iptName);
-
-          this._setError(iptName, true, result[iptName]);
-        });
+        errors.push(iptName);
       }
-    } else {
-      Object.keys(this._inputs).forEach(iptName => {
-        if (!this._validateOne(iptName, context)) {
-          isValid = false;
-          errors.push(iptName);
-        }
-      });
-    }
+    });
 
     return {
       isValid: isValid,
@@ -295,8 +267,6 @@ export default class Form extends InputContainer {
 
     if (input.props.type === 'checkbox') {
       value = input.getChecked();
-    } else if (input.props.type === 'file') {
-      value = input.getInputDOMNode().files;
     } else {
       value = input.getValue();
     }
@@ -315,20 +285,14 @@ export default class Form extends InputContainer {
 
     if (isValid) {
       this.props.onValidSubmit(values);
-    } else {
-      this.props.onInvalidSubmit(errors, values);
     }
   }
 }
 
 Form.propTypes = {
   className      : React.PropTypes.string,
-  model          : React.PropTypes.object,
   method         : React.PropTypes.oneOf(['get', 'post']),
   onValidSubmit  : React.PropTypes.func.isRequired,
-  onInvalidSubmit: React.PropTypes.func,
-  validateOne    : React.PropTypes.func,
-  validateAll    : React.PropTypes.func,
   validationEvent: React.PropTypes.oneOf([
     'onChange', 'onBlur', 'onFocus'
   ]),
@@ -339,8 +303,6 @@ Form.propTypes = {
 };
 
 Form.defaultProps = {
-  model          : {},
   validationEvent: 'onChange',
   method         : 'get',
-  onInvalidSubmit: () => {}
 };

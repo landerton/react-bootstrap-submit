@@ -1,21 +1,16 @@
 # Form validation for [react-bootstrap](http://react-bootstrap.github.io/).
 
-Feedback, suggestions and pull-requests are welcome!
-
 ## Example 1: Simple Registration Form
 
 ```js
 import React from 'react';
 import { ButtonInput } from 'react-bootstrap';
-
-// Import Form and ValidatedInput components. Notice that you need to use
-// this ValidatedInput component instead of the original one to have
-// validation and other features working
-import { Form, ValidatedInput } from 'react-bootstrap-validation';
-
-// There's also a wrapper for radio inputs that react-bootstrap
-// doesn't (yet) have
-import { Radio, RadioGroup } from 'react-bootstrap-validation';
+import {
+  Form,
+  ValidatedInput,
+  validatedRadio,
+  RadioGroup,
+  ValidatedCheckbox } from 'react-bootstrap-validation';
 
 class MyRegistrationForm extends React.Component {
 
@@ -23,11 +18,7 @@ class MyRegistrationForm extends React.Component {
 
     render() {
         return (
-            <Form
-                // Supply callbacks to both valid and invalid
-                // submit attempts
-                onValidSubmit={this._handleValidSubmit.bind(this)}
-                onInvalidSubmit={this._handleInvalidSubmit.bind(this)}>
+            <Form onValidSubmit={this._handleValidSubmit.bind(this)}>
 
                 <ValidatedInput
                     type='text'
@@ -41,8 +32,7 @@ class MyRegistrationForm extends React.Component {
                     errorHelp={{
                         required: 'Please enter your email',
                         isEmail: 'Email is invalid'
-                    }}
-                />
+                    }} />
 
                 <ValidatedInput
                     type='password'
@@ -53,8 +43,7 @@ class MyRegistrationForm extends React.Component {
                     errorHelp={{
                         required: 'Please specify a password',
                         isLength: 'Password must be at least 6 characters'
-                    }}
-                />
+                    }} />
 
                 <ValidatedInput
                     type='password'
@@ -64,44 +53,37 @@ class MyRegistrationForm extends React.Component {
                     validate={(val, context) => val === context.password}
                     // If errorHelp property is a string, then it is used
                     // for all possible validation errors
-                    errorHelp='Passwords do not match'
-                />
+                    errorHelp='Passwords do not match' />
 
-                {/* Custom component to supply a couple of bootstrap
-                    wrappers around radio inputs to look pretty */}
-                <RadioGroup name='radio'
-                            value='3'
-                            label='Which one is better?'
-                            // Supports validation as well
-                            validate={v => v === 'cola'}
-                            errorHelp='Pepsi? Seriously?'
-                            // And accepts (almost) all the same props
-                            // as other react-bootstrap components
-                            labelClassName='col-xs-2'
-                            wrapperClassName='col-xs-10'>
-                    {/* Radio is a simple wrapper around react-bootstrap's
-                        Input component */}
-                    <Radio value='cola' label='Cola' />
-                    <Radio value='pepsi' label='Pepsi' />
+                <RadioGroup
+                    name='radio'
+                    value='3'
+                    label='Which one is better?'
+                    // Supports validation as well
+                    validate={v => v === 'cola'}
+                    errorHelp='Pepsi? Seriously?'
+                    // And accepts (almost) all the same props
+                    // as other react-bootstrap components
+                    labelClassName='col-xs-2'
+                    wrapperClassName='col-xs-10'>
+                    <ValidatedRadio value='cola' label='Cola' />
+                    <ValidatedRadio value='pepsi' label='Pepsi' />
                 </RadioGroup>
 
-                <ValidatedInput
-                    type='checkbox'
+                <ValidatedCheckbox
                     name='agree'
                     label='I agree to the terms and conditions'
                     // Validation rules is easily extendable to fit
                     // your needs. There are only two custom rules,
                     // 'isChecked' and 'required', others are stock
                     // validator.js methods
-                    validate='isChecked'
-                />
+                    validate='isChecked' />
 
                 <ButtonInput
                     type='submit'
                     bsSize='large'
                     bsStyle='primary'
-                    value='Register'
-                />
+                    value='Register' />
             </Form>
         );
     }
@@ -109,94 +91,6 @@ class MyRegistrationForm extends React.Component {
     _handleValidSubmit(values) {
         // Values is an object containing all values
         // from the inputs
-    }
-
-    _handleInvalidSubmit(errors, values) {
-        // Errors is an array containing input names
-        // that failed to validate
-    }
-
-    ...
-
-}
-```
-
-## Example 2: Validating With Schema
-
-In case you have an external validation schema, there are a couple of methods that allow you to use it. Consider the following example with [revalidator](https://github.com/flatiron/revalidator):
-
-```js
-
-...
-
-import revalidator from 'revalidator';
-
-// Simple revalidator schema with two fields
-let schema = {
-    properties: {
-        email: {
-            type: 'string',
-            maxLength: 255,
-            format: 'email',
-            required: true,
-            allowEmpty: false
-        },
-        password: {
-            type: 'string',
-            minLength: 8,
-            maxLength: 60,
-            required: true,
-            allowEmpty: false
-        }
-    }
-};
-
-class MyLoginForm extends React.Component {
-
-    ...
-
-    render() {
-        return (
-            <Form
-                // Provide a validation method for the whole
-                // form values object. This way inputs will only
-                // be validated upon submit.
-                validateAll={this._validateForm.bind(this)}
-                onValidSubmit={this._onSubmit.bind(this)}>
-
-                <ValidatedInput type='text'
-                       label='Email'
-                       name='email'
-                       errorHelp='Email address is invalid'/>
-
-                <ValidatedInput type='password'
-                       name='password'
-                       label='Password'
-                       errorHelp='Password is invalid'/>
-
-                ...
-
-            </Form>
-        );
-    }
-
-    _validateForm(values) {
-        let res = revalidator.validate(values, schema);
-
-        // If the values passed validation, we return true
-        if (res.valid) {
-            return true;
-        }
-
-        // Otherwise we should return an object containing errors
-        // e.g. { email: true, password: true }
-        return res.errors.reduce((errors, error) => {
-            // Set each property to either true or
-            // a string error description
-            errors[error.property] = true;
-
-            return errors;
-        }, {});
     }
 
     ...
@@ -220,78 +114,6 @@ Callback that receives `values` object, which is a hash map of `inputName => inp
     <ValidatedInput name="name" />
 
     ...
-
-</Form>
-```
-
-##### `onInvalidSubmit: Function`
-Callback that is called when there was form submit event and form did not pass the validation. Receives two params: `errors: Array` and `values: Object`.
-
-```js
-<Form onValidSubmit={values => alert(`Hello ${values.name}!`)}
-      onInvalidSubmit={(errors, values) => {
-          alert(`Following fields are invalid: ${errors.join(', ')}`);
-      }}>
-    <ValidatedInput name="firstName" validate="required"/>
-    <ValidatedInput name="lastName" validate="required"/>
-
-    ...
-
-</Form>
-```
-
-##### `model: Object`
-Accepts a hash map of initial form values.
-
-```js
-<Form onValidSubmit={values => alert(`Hello ${values.name}!`)}
-      model={{
-          firstName: 'Jon',
-          lastName: 'Snow'
-      }}>
-    <ValidatedInput name="firstName" validate="required"/>
-    <ValidatedInput name="lastName" validate="required"/>
-
-    ...
-
-</Form>
-```
-
-##### `validateOne: Function`
-If present, this callback is called when field needs to be revalidated -- either when form is submitted or input's `onChange` event is fired. Receives following arguments: `inputName: String`, `inputValue: String|Boolean|FileList` and `context: Object`. Result is expected in the same format as in the `ValidatedInput`'s `validate` callback. Useful for validation with external schema.
-```js
-function validateInput(name, value, context) {
-    if (!SomeExternalSchema.validate(name, value, context)) {
-        return '';
-    }
-
-    return true;
-}
-
-...
-
-<Form onValidSubmit={this._onSubmit.bind(this)}
-      validateOne={validateInput}>
-
-      ...
-
-</Form>
-```
-
-##### `validateAll: Function`
-If present, this callback is called instead of field by field validation. Receives one argument: `values: Object`. Should return `true` if data is successfully validated, otherwise errors hash map of `fieldName => errorText`. If no specific error text is available, boolean `true` is allowed instead of string `errorText`.
-
-```js
-<Form onValidSubmit={this._onSubmit.bind(this)}
-      validateAll={values => {
-          // Force validation failure, return errors object.
-          return {
-              email: true,
-              firstName: 'First name is invalid'
-          };
-      }}>
-
-      ...
 
 </Form>
 ```
@@ -376,12 +198,13 @@ And the next ones are from `ValidatedInput`:
 `validate, errorHelp`
 
 ```js
-<RadioGroup name='radio'
-            // Set the initial value
-            value='1'
-            label='Some random options'
-            labelClassName='col-xs-2'
-            wrapperClassName='col-xs-10'>
+<RadioGroup
+    name='radio'
+    // Set the initial value
+    value='1'
+    label='Some random options'
+    labelClassName='col-xs-2'
+    wrapperClassName='col-xs-10'>
     <Radio value='1' label='Option 1' />
     <Radio value='2' label='Option 2' />
     <Radio value='3' label='Option 3' />
@@ -404,29 +227,3 @@ Returns `true` if the value is not null. Can be used as an alias to `!isNull` va
 Used only for checkboxes as their value is return as `boolean` by the `Form` component. Returns `true` if the value equals to `'true'`. This is because all the values coming to validator.js methods are [treated as strings](https://github.com/chriso/validator.js#strings-only).
 
 Refer to validator.js documentation for more information on it's validation methods and how to [extend it](https://github.com/chriso/validator.js#extensions).
-
-## License (MIT)
-
-```
-The MIT License (MIT)
-
-Copyright (c) 2016 Landon Anderton
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-```

@@ -17,10 +17,7 @@ validator['required'] = function required(val) {
 * @returns {Boolean}
 */
 validator['isChecked'] =  function isChecked(val) {
-  // compare it against string representation of a bool value, because
-  // validator ensures all incoming values are coerced to strings
-  // https://github.com/chriso/validator.js#strings-only
-  return val === 'true';
+  return val;
 }
 
 export default validator;
