@@ -1,6 +1,6 @@
 {
   "name": "react-bootstrap-submit",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "Enforces valid react bootstrap form inputs before submit.",
   "repository": {
     "type": "git",
