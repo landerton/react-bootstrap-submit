@@ -241,7 +241,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return child;
 	      }
 	
-	      var model = this.props.model || {};
+	      var model = {};
 	
 	      if (child.type === _ValidatedInput2.default || child.type === _RadioGroup2.default || child.type && child.type.prototype !== null && (child.type.prototype instanceof _ValidatedInput2.default || child.type.prototype instanceof _RadioGroup2.default)) {
 	        var _ret = function () {
@@ -326,7 +326,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	      if (Array.isArray(input)) {
 	        console.warn('Multiple inputs use the same name "' + iptName + '"');
-	
 	        return false;
 	      }
 	
@@ -344,9 +343,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	        result = true;
 	      }
 	
-	      if (typeof this.props.validateOne === 'function') {
-	        result = this.props.validateOne(iptName, value, context, result);
-	      }
 	      // if result is !== true, it is considered an error
 	      // it can be either bool or string error
 	      if (result !== true) {
@@ -369,28 +365,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var isValid = true;
 	      var errors = [];
 	
-	      if (typeof this.props.validateAll === 'function') {
-	        (function () {
-	          var result = _this5.props.validateAll(context);
-	
-	          if (result !== true) {
-	            isValid = false;
-	
-	            Object.keys(result).forEach(function (iptName) {
-	              errors.push(iptName);
-	
-	              _this5._setError(iptName, true, result[iptName]);
-	            });
-	          }
-	        })();
-	      } else {
-	        Object.keys(this._inputs).forEach(function (iptName) {
-	          if (!_this5._validateOne(iptName, context)) {
-	            isValid = false;
-	            errors.push(iptName);
-	          }
-	        });
-	      }
+	      Object.keys(this._inputs).forEach(function (iptName) {
+	        if (!_this5._validateOne(iptName, context)) {
+	          isValid = false;
+	          errors.push(iptName);
+	        }
+	      });
 	
 	      return {
 	        isValid: isValid,
@@ -453,8 +433,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	      if (input.props.type === 'checkbox') {
 	        value = input.getChecked();
-	      } else if (input.props.type === 'file') {
-	        value = input.getInputDOMNode().files;
 	      } else {
 	        value = input.getValue();
 	      }
@@ -478,8 +456,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	      if (isValid) {
 	        this.props.onValidSubmit(values);
-	      } else {
-	        this.props.onInvalidSubmit(errors, values);
 	      }
 	    }
 	  }]);
@@ -492,21 +468,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Form.propTypes = {
 	  className: _react2.default.PropTypes.string,
-	  model: _react2.default.PropTypes.object,
 	  method: _react2.default.PropTypes.oneOf(['get', 'post']),
 	  onValidSubmit: _react2.default.PropTypes.func.isRequired,
-	  onInvalidSubmit: _react2.default.PropTypes.func,
-	  validateOne: _react2.default.PropTypes.func,
-	  validateAll: _react2.default.PropTypes.func,
 	  validationEvent: _react2.default.PropTypes.oneOf(['onChange', 'onBlur', 'onFocus']),
 	  errorHelp: _react2.default.PropTypes.oneOfType([_react2.default.PropTypes.string, _react2.default.PropTypes.object])
 	};
 	
 	Form.defaultProps = {
-	  model: {},
 	  validationEvent: 'onChange',
-	  method: 'get',
-	  onInvalidSubmit: function onInvalidSubmit() {}
+	  method: 'get'
 	};
 	module.exports = exports['default'];
 
@@ -554,9 +524,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: function componentWillMount() {
 	      this._inputs = {};
 	    }
-	  }, {
-	    key: 'componentWillUnmount',
-	    value: function componentWillUnmount() {}
 	  }, {
 	    key: 'registerInput',
 	    value: function registerInput(input) {
@@ -40527,9 +40494,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	* @params {String} val
 	* @returns {Boolean}
 	*/
-	_validator2.default.extend('required', function (val) {
-	  return !_validator2.default.isNull(val);
-	});
+	_validator2.default['required'] = function required(val) {
+	  return !_validator2.default.isEmpty(val);
+	};
 	
 	/**
 	* Returns true if the value is boolean true
@@ -40537,12 +40504,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	* @params {String} val
 	* @returns {Boolean}
 	*/
-	_validator2.default.extend('isChecked', function (val) {
+	_validator2.default['isChecked'] = function isChecked(val) {
 	  // compare it against string representation of a bool value, because
 	  // validator ensures all incoming values are coerced to strings
 	  // https://github.com/chriso/validator.js#strings-only
+	  console.log('(((((((((())))))))))');
+	  console.log(val);
 	  return val === 'true';
-	});
+	};
 	
 	exports.default = _validator2.default;
 	module.exports = exports['default'];
@@ -43353,6 +43322,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	    key: 'getChecked',
 	    value: function getChecked() {
 	      var element = _reactDom2.default.findDOMNode(this.input);
+	      console.log('***********');
+	      console.log(this.input.checked);
 	      if (element) {
 	        return element.checked;
 	      }
