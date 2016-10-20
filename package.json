@@ -62,8 +62,10 @@
     "react": "^15.3.0",
     "react-dom": "^15.3.0",
     "react-bootstrap": "^0.30.5",
-    "validator": "^6.1.0",
     "classnames": "^2.2.5"
+  },
+  "dependencies": {
+    "validator": "^6.1.0"
   },
   "main": "index.js"
 }
