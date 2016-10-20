@@ -515,6 +515,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	      this._inputs = {};
 	    }
 	  }, {
+	    key: 'componentWillUnmount',
+	    value: function componentWillUnmount() {}
+	  }, {
 	    key: 'registerInput',
 	    value: function registerInput(input) {
 	      var type = input.props.type;
@@ -40485,7 +40488,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	* @returns {Boolean}
 	*/
 	_validator2.default['required'] = function required(val) {
-	  return !_validator2.default.isEmpty(val);
+	  if (val && typeof val === 'string') {
+	    return !_validator2.default.isEmpty(val);
+	  }
+	  return false;
 	};
 	
 	/**

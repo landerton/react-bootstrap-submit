@@ -7,7 +7,10 @@ import validator from 'validator';
 * @returns {Boolean}
 */
 validator['required'] = function required(val) {
-  return !validator.isEmpty(val);
+  if (val && typeof(val) === 'string') {
+    return !validator.isEmpty(val);
+  }
+  return false;
 }
 
 /**

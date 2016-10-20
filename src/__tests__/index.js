@@ -167,3 +167,51 @@ describe('RadioGroup', () => {
     expect(onSubmit.calledOnce).to.equal(true);
   });
 });
+
+let radioGroupRequired;
+
+describe('RadioGroup with required', () => {
+
+  beforeEach(() => {
+    onSubmit = sinon.spy();
+    onChange = sinon.spy();
+
+    radioGroupRequired = (value) => {
+      return mount(
+        <Form
+          onValidSubmit={onSubmit}>
+          <RadioGroup
+            name='radio'
+            value={value}
+            onChange={onChange}
+            label='Which one is better?'
+            validate='required'
+            errorHelp='Click one!'>
+
+            <ValidatedRadio value='cola' label='Cola' />
+            <ValidatedRadio value='pepsi' label='Pepsi' />
+          </RadioGroup>
+        </Form>
+      );
+    }
+  });
+
+  it('no value shows error', () => {
+    const wrapper = radioGroupRequired(null);
+    expect(wrapper.find('.has-error')).to.have.length(0);
+    wrapper.find('form').simulate('submit');
+    expect(wrapper.find('.has-error')).to.have.length(1);
+    expect(wrapper.find('.help-block')).to.have.text('Click one!');
+    wrapper.find('input[type="radio"][value="pepsi"]').simulate('change');
+    expect(onChange.calledOnce).to.equal(true);
+  });
+
+  it('value submits', () => {
+    const wrapper = radioGroupRequired('cola');
+    expect(wrapper.find('.has-error')).to.have.length(0);
+    wrapper.find('form').simulate('submit');
+    expect(wrapper.find('.has-error')).to.have.length(0);
+    wrapper.find('input[type="radio"][value="cola"]').simulate('change');
+    expect(onSubmit.calledOnce).to.equal(true);
+  });
+});
