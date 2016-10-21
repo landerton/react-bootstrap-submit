@@ -63,7 +63,7 @@ describe('ValidatedInput', () => {
     onSubmit = sinon.spy();
     onChange = sinon.spy();
 
-    input = (value) => {
+    input = (value, validate) => {
       return mount(
         <Form
           onValidSubmit={onSubmit}
@@ -74,7 +74,7 @@ describe('ValidatedInput', () => {
             value={value}
             onChange={onChange}
             label="Your personal password"
-            validate='required,isLength:6:60'
+            validate={validate}
             errorHelp={{
               required: 'Please specify a password',
               isLength: 'Password must be at least 6 characters'
@@ -86,7 +86,7 @@ describe('ValidatedInput', () => {
 
 
   it('required called', () => {
-    const wrapper = input('');
+    const wrapper = input('', 'required,isLength:6:60');
     wrapper.find('form').simulate('submit');
     wrapper.find('input').simulate('change', {target: {value: 'password'}});
     expect(onChange.calledOnce).to.equal(true);
@@ -96,7 +96,7 @@ describe('ValidatedInput', () => {
   });
 
   it('isLength called', () => {
-    const wrapper = input('blah');
+    const wrapper = input('blah', 'required,isLength:6:60');
     wrapper.find('form').simulate('submit');
     expect(onSubmit.callCount).to.equal(0);
     expect(wrapper.find('.help-block')).to.have.text('Password must be at least 6 characters');
@@ -104,7 +104,14 @@ describe('ValidatedInput', () => {
   });
 
   it('submit called', () => {
-    const wrapper = input('password');
+    const wrapper = input('password', 'required,isLength:6:60');
+    wrapper.find('form').simulate('submit');
+    expect(onSubmit.calledOnce).to.equal(true);
+    expect(wrapper.find('.has-error')).to.have.length(0);
+  });
+
+  it('required number', () => {
+    const wrapper = input(8.53, 'required');
     wrapper.find('form').simulate('submit');
     expect(onSubmit.calledOnce).to.equal(true);
     expect(wrapper.find('.has-error')).to.have.length(0);

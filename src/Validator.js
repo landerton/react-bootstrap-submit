@@ -3,24 +3,29 @@ import validator from 'validator';
 /**
 * Returns true if the value is not empty
 *
-* @params {String} val
+* @params val
 * @returns {Boolean}
 */
 validator['required'] = function required(val) {
-  if (val && typeof(val) === 'string') {
-    return !validator.isEmpty(val);
+  if (val) {
+    return true;
+  } else {
+    return false;
   }
-  return false;
 }
 
 /**
-* Returns true if the value is boolean true
+* Returns true if the value is not empty
 *
-* @params {String} val
+* @params val
 * @returns {Boolean}
 */
 validator['isChecked'] =  function isChecked(val) {
-  return val;
+  if (val) {
+    return true;
+  } else {
+    return false;
+  }
 }
 
 export default validator;
