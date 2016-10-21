@@ -40484,24 +40484,29 @@ return /******/ (function(modules) { // webpackBootstrap
 	/**
 	* Returns true if the value is not empty
 	*
-	* @params {String} val
+	* @params val
 	* @returns {Boolean}
 	*/
 	_validator2.default['required'] = function required(val) {
-	  if (val && typeof val === 'string') {
-	    return !_validator2.default.isEmpty(val);
+	  if (val) {
+	    return true;
+	  } else {
+	    return false;
 	  }
-	  return false;
 	};
 	
 	/**
-	* Returns true if the value is boolean true
+	* Returns true if the value is not empty
 	*
-	* @params {String} val
+	* @params val
 	* @returns {Boolean}
 	*/
 	_validator2.default['isChecked'] = function isChecked(val) {
-	  return val;
+	  if (val) {
+	    return true;
+	  } else {
+	    return false;
+	  }
 	};
 	
 	exports.default = _validator2.default;
