@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import InputContainer from './InputContainer';
 import ValidatedInput from './ValidatedInput';
 import RadioGroup from './RadioGroup';
@@ -290,15 +291,15 @@ export default class Form extends InputContainer {
 }
 
 Form.propTypes = {
-  className      : React.PropTypes.string,
-  method         : React.PropTypes.oneOf(['get', 'post']),
-  onValidSubmit  : React.PropTypes.func.isRequired,
-  validationEvent: React.PropTypes.oneOf([
+  className      : PropTypes.string,
+  method         : PropTypes.oneOf(['get', 'post']),
+  onValidSubmit  : PropTypes.func.isRequired,
+  validationEvent: PropTypes.oneOf([
     'onChange', 'onBlur', 'onFocus'
   ]),
-  errorHelp      : React.PropTypes.oneOfType([
-    React.PropTypes.string,
-    React.PropTypes.object
+  errorHelp      : PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.object
   ])
 };
 

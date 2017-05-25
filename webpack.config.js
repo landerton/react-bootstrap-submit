@@ -64,5 +64,13 @@ module.exports = {
         amd: 'classnames',
       },
     },
+    {
+      'prop-types': {
+        root: 'PropTypes',
+        commonjs2: 'prop-types',
+        commonjs: 'prop-types',
+        amd: 'prop-types',
+      },
+    },
   ],
 };

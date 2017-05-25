@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import ValidatedRadio from './ValidatedRadio';
 import InputContainer from './InputContainer';
 import classNames from 'classnames';
@@ -85,24 +86,24 @@ export default class RadioGroup extends InputContainer {
 }
 
 RadioGroup.propTypes = {
-  hasFeedback     : React.PropTypes.bool,
+  hasFeedback     : PropTypes.bool,
   bsSize (props) {
-    return React.PropTypes.oneOf(['small', 'medium', 'large'])
+    return PropTypes.oneOf(['small', 'medium', 'large'])
     .apply(null, arguments);
   },
-  bsStyle         : React.PropTypes.oneOf(['success', 'warning', 'error']),
-  groupClassName  : React.PropTypes.string,
-  labelClassName  : React.PropTypes.string,
-  validationEvent : React.PropTypes.oneOf([
+  bsStyle         : PropTypes.oneOf(['success', 'warning', 'error']),
+  groupClassName  : PropTypes.string,
+  labelClassName  : PropTypes.string,
+  validationEvent : PropTypes.oneOf([
     '', 'onChange'
   ]),
-  validate        : React.PropTypes.oneOfType([
-    React.PropTypes.func,
-    React.PropTypes.string
+  validate        : PropTypes.oneOfType([
+    PropTypes.func,
+    PropTypes.string
   ]),
-  errorHelp       : React.PropTypes.oneOfType([
-    React.PropTypes.string,
-    React.PropTypes.object
+  errorHelp       : PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.object
   ])
 };
 

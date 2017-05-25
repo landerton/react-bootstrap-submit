@@ -1,6 +1,6 @@
 {
   "name": "react-bootstrap-submit",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Enforces valid react bootstrap form inputs before submit.",
   "repository": {
     "type": "git",
@@ -57,13 +57,15 @@
     "sinon": "^1.17.3",
     "webpack": "^2.6.0",
     "react-bootstrap": "^0.31.0",
-    "classnames": "^2.2.5"
+    "classnames": "^2.2.5",
+    "prop-types": "^15.5.10"
   },
   "peerDependencies": {
     "react": "^15.4.2",
     "react-dom": "^15.4.2",
     "react-bootstrap": "^0.31.0",
-    "classnames": "^2.2.5"
+    "classnames": "^2.2.5",
+    "prop-types": "^15.5.10"
   },
   "dependencies": {
     "validator": "^7.0.0"
